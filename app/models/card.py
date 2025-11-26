@@ -38,3 +38,5 @@ class Card(Base):
 
     # Relationships
     account = relationship("Account", back_populates="cards")
+    transactions = relationship("Transaction", foreign_keys="Transaction.card_id", back_populates="card")
+

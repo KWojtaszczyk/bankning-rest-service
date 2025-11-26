@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
-from app.routes import auth, account_holders, accounts, transactions, cards, statements
+from app.routes import auth, account_holders, accounts, transactions, cards, statements, card_transactions
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -30,7 +30,9 @@ app.include_router(account_holders.router, prefix=f"{settings.API_PREFIX}/accoun
 app.include_router(accounts.router, prefix=f"{settings.API_PREFIX}/accounts", tags=["Accounts"])
 app.include_router(transactions.router, prefix=f"{settings.API_PREFIX}/transactions", tags=["Transactions"])
 app.include_router(cards.router, prefix=f"{settings.API_PREFIX}/cards", tags=["Cards"])
-app.include_router(statements.router, prefix=f"{settings.API_PREFIX}/statements", tags=["Statements"])
+app.include_router(card_transactions.router, prefix=f"{settings.API_PREFIX}", tags=["Card Transactions"])
+app.include_router(statements.router, prefix=f"{settings.API_PREFIX}", tags=["Statements"])
+
 
 @app.get("/")
 async def root():

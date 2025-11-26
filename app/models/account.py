@@ -37,4 +37,6 @@ class Account(Base):
                                      back_populates="from_account")
     transactions_to = relationship("Transaction", foreign_keys="Transaction.to_account_id", back_populates="to_account")
     cards = relationship("Card", back_populates="account")
+    statements = relationship("Statement", back_populates="account")
+
 

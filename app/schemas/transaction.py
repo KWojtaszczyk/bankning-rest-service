@@ -24,10 +24,12 @@ class TransactionResponse(BaseModel):
     transaction_type: str
     from_account_id: Optional[int]
     to_account_id: Optional[int]
+    card_id: Optional[int] = None
     amount: Decimal
     currency: str
     status: str
     description: Optional[str]
+    merchant_name: Optional[str] = None
     reference_number: str
     created_at: datetime
     completed_at: Optional[datetime]

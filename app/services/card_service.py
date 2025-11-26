@@ -1,12 +1,16 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from app.models.card import Card, CardType, CardStatus
 from app.models.account import Account
+from app.models.transaction import Transaction, TransactionType, TransactionStatus
 from app.schemas.card import CardCreate
+from app.services.transaction_service import TransactionService
 from typing import List, Optional, Tuple
 from decimal import Decimal
 import random
 import hashlib
 from datetime import date, datetime, timezone, timedelta
+
 
 class CardService:
     """Service for managing bank cards"""
@@ -191,6 +195,93 @@ class CardService:
         db.commit()
         db.refresh(card)
         return card
+    
+    @staticmethod
+    def get_daily_spending(db: Session, card_id: int, target_date: date) -> Decimal:
+        """Calculate total spending for a card on a specific date"""
+        start_of_day = datetime.combine(target_date, datetime.min.time())
+        end_of_day = datetime.combine(target_date, datetime.max.time())
+        
+        total = db.query(func.sum(Transaction.amount)).filter(
+            Transaction.card_id == card_id,
+            Transaction.transaction_type == TransactionType.CARD_PAYMENT,
+            Transaction.status == TransactionStatus.COMPLETED,
+            Transaction.created_at >= start_of_day,
+            Transaction.created_at <= end_of_day
+        ).scalar()
+        
+        return total or Decimal('0.00')
+    
+    @staticmethod
+    def validate_card_transaction(db: Session, card_id: int, amount: Decimal) -> Tuple[bool, Optional[str]]:
+        """
+        Validate if a card transaction can be processed
+        Returns: (is_valid, error_message)
+        """
+        card = db.query(Card).filter(Card.id == card_id).first()
+        if not card:
+            return False, "Card not found"
+        
+        # Check card status
+        if card.status != CardStatus.ACTIVE:
+            return False, f"Card is {card.status.value}. Only active cards can be used for transactions."
+        
+        # Check daily limit
+        today = datetime.now(timezone.utc).date()
+        daily_spending = CardService.get_daily_spending(db, card_id, today)
+        
+        if daily_spending + amount > card.daily_limit:
+            remaining = card.daily_limit - daily_spending
+            return False, f"Transaction would exceed daily limit. Remaining limit: ${remaining:.2f}"
+        
+        # Check account balance
+        account = card.account
+        if account.balance < amount:
+            return False, "Insufficient funds in linked account"
+        
+        return True, None
+    
+    @staticmethod
+    def process_card_payment(
+        db: Session,
+        card_id: int,
+        amount: Decimal,
+        merchant_name: str,
+        description: Optional[str] = None
+    ) -> Transaction:
+        """
+        Process a card payment transaction
+        Returns: Transaction object
+        """
+        # Validate transaction
+        is_valid, error_msg = CardService.validate_card_transaction(db, card_id, amount)
+        if not is_valid:
+            raise ValueError(error_msg)
+        
+        card = db.query(Card).filter(Card.id == card_id).first()
+        
+        # Create transaction
+        transaction = Transaction(
+            transaction_type=TransactionType.CARD_PAYMENT,
+            from_account_id=card.account_id,
+            card_id=card_id,
+            amount=amount,
+            currency=card.account.currency,
+            status=TransactionStatus.COMPLETED,
+            description=description or f"Card payment at {merchant_name}",
+            merchant_name=merchant_name,
+            reference_number=TransactionService._generate_reference(),
+            completed_at=datetime.now(timezone.utc)
+        )
+        
+        # Update account balance
+        card.account.balance -= amount
+        
+        db.add(transaction)
+        db.commit()
+        db.refresh(transaction)
+        
+        return transaction
     
     @staticmethod
     def mask_card_number(card_number: str) -> str:

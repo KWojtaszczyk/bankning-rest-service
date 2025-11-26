@@ -39,3 +39,11 @@ class CardActivationRequest(BaseModel):
 class CardLimitUpdate(BaseModel):
     new_limit: Decimal = Field(..., ge=0, description="New daily spending limit")
 
+
+class CardTransactionRequest(BaseModel):
+    """Request to simulate/process a card transaction"""
+    amount: Decimal = Field(..., gt=0, description="Transaction amount")
+    merchant_name: str = Field(..., min_length=1, max_length=100, description="Merchant name")
+    description: Optional[str] = Field(None, description="Transaction description")
+
+
