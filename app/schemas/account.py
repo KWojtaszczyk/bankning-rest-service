@@ -1,17 +1,14 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
 from typing import Optional
 from decimal import Decimal
-
 
 class AccountBase(BaseModel):
     account_type: str = Field(..., description="Account type: checking, savings, or business")
     currency: str = Field(default="USD", description="Currency code")
 
-
 class AccountCreate(AccountBase):
-    initial_deposit: Optional[Decimal] = Field(default=0.00, ge=0)
-
+    initial_deposit: Decimal = Field(default=Decimal('0.00'), ge=0, description="Initial deposit amount")
 
 class AccountResponse(AccountBase):
     id: int
@@ -20,10 +17,8 @@ class AccountResponse(AccountBase):
     balance: Decimal
     status: str
     created_at: datetime
-
-    class Config:
-        from_attributes = True
-
+    
+    model_config = ConfigDict(from_attributes=True)
 
 class AccountBalanceResponse(BaseModel):
     account_number: str

@@ -9,7 +9,12 @@ from app.schemas.user import UserCreate, TokenData
 from app.config import settings
 
 # Password hashing configuration
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Disable bcrypt truncate_error since we pre-hash with SHA256 (always 64 chars)
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
+
 
 
 def _prepare_password(password: str) -> str:

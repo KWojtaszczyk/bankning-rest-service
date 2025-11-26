@@ -16,7 +16,6 @@ app = FastAPI(
 )
 
 # Configure CORS
-# TODO: In production, replace allow_origins=["*"] with specific domain list
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # In production, specify actual origins
@@ -33,7 +32,6 @@ app.include_router(transactions.router, prefix=f"{settings.API_PREFIX}/transacti
 app.include_router(cards.router, prefix=f"{settings.API_PREFIX}/cards", tags=["Cards"])
 app.include_router(statements.router, prefix=f"{settings.API_PREFIX}/statements", tags=["Statements"])
 
-
 @app.get("/")
 async def root():
     return {
@@ -42,7 +40,7 @@ async def root():
         "docs": f"{settings.API_PREFIX}/docs"
     }
 
-
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
