@@ -23,13 +23,16 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-light);
     min-height: 100vh;
-    background-image: 
+    background-image:
         radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.15) 0%, transparent 20%),
         radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 20%);
 }
 
 /* Utilities */
-.hidden { display: none !important; }
+.hidden {
+    display: none !important;
+}
+
 .glass {
     background: var(--bg-card);
     backdrop-filter: blur(12px);
@@ -80,6 +83,7 @@ body {
     font-size: 2.5rem;
     background: linear-gradient(to right, var(--primary), var(--secondary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
@@ -95,7 +99,8 @@ body {
     font-size: 0.9rem;
 }
 
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 12px;
     background: rgba(0, 0, 0, 0.2);
@@ -142,6 +147,7 @@ body {
     margin-bottom: 40px;
     background: linear-gradient(to right, var(--primary), var(--secondary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -156,7 +162,8 @@ body {
     transition: all 0.3s;
 }
 
-.sidebar nav a:hover, .sidebar nav a.active {
+.sidebar nav a:hover,
+.sidebar nav a.active {
     background: rgba(79, 70, 229, 0.1);
     color: var(--primary);
 }
@@ -249,7 +256,8 @@ header {
     margin-bottom: 30px;
 }
 
-.accounts-section, .transfer-section {
+.accounts-section,
+.transfer-section {
     padding: 20px;
 }
 
@@ -261,7 +269,7 @@ header {
 }
 
 .account-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 15px;
@@ -295,7 +303,8 @@ header {
     border-collapse: collapse;
 }
 
-.transactions-table th, .transactions-table td {
+.transactions-table th,
+.transactions-table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid var(--glass-border);
@@ -312,13 +321,37 @@ header {
     font-size: 0.8rem;
 }
 
-.status-completed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-.status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-.status-failed { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+.status-completed {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+.status-pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.status-failed {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--danger);
+}
 
 @media (max-width: 768px) {
-    .dashboard { flex-direction: column; }
-    .sidebar { width: auto; margin: 0; padding: 15px; }
-    .main-content { padding: 20px; }
-    .content-grid { grid-template-columns: 1fr; }
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: auto;
+        margin: 0;
+        padding: 15px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
 }

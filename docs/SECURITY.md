@@ -133,25 +133,7 @@ All API inputs validated using Pydantic models:
 allow_origins=["*"]  # ⚠️ DEVELOPMENT ONLY
 ```
 
-#### Production Recommendations
-```python
-allow_origins=[
-    "https://yourdomain.com",
-    "https://app.yourdomain.com"
-]
-allow_credentials=True
-allow_methods=["GET", "POST", "PUT", "DELETE"]
-allow_headers=["Authorization", "Content-Type"]
-```
-
 ### HTTPS/TLS
-
-#### Production Requirements
-- **HTTPS only** in production
-- TLS 1.2 or higher
-- Valid SSL certificate
-- Redirect HTTP to HTTPS
-- HSTS (HTTP Strict Transport Security) headers
 
 #### Implementation
 ```python
@@ -238,46 +220,6 @@ API_PREFIX=/api
 - [ ] Data encryption at rest
 - [ ] PII data masking in logs
 
-### Production Checklist 📋
-
-Before deploying to production:
-
-1. **Environment**
-   - [ ] Set strong `SECRET_KEY` (min 32 random characters)
-   - [ ] Set `DEBUG=False`
-   - [ ] Configure production database (PostgreSQL recommended)
-   - [ ] Set up HTTPS/TLS
-   - [ ] Configure CORS with specific origins
-
-2. **Security**
-   - [ ] Implement rate limiting
-   - [ ] Set up monitoring and alerting
-   - [ ] Enable request logging
-   - [ ] Implement audit logging
-   - [ ] Review and test all authentication flows
-   - [ ] Conduct security audit/penetration testing
-
-3. **Database**
-   - [ ] Enable database backups
-   - [ ] Set up database connection pooling
-   - [ ] Configure database access restrictions
-   - [ ] Implement database encryption at rest
-
-4. **Infrastructure**
-   - [ ] Use reverse proxy (nginx/Apache)
-   - [ ] Set up firewall rules
-   - [ ] Implement DDoS protection
-   - [ ] Configure security headers
-   - [ ] Set up intrusion detection
-
-## Vulnerability Reporting
-
-If you discover a security vulnerability, please:
-1. **Do not** open a public issue
-2. Email security concerns to: [security@yourdomain.com]
-3. Include detailed description and reproduction steps
-4. Allow reasonable time for fix before disclosure
-
 ## Compliance Considerations
 
 ### Future Compliance Goals
@@ -302,20 +244,6 @@ pip install --upgrade -r requirements.txt
 # Check for security vulnerabilities
 pip-audit
 ```
-
-### Security Patches
-- Monitor CVE databases for Python/FastAPI vulnerabilities
-- Subscribe to security mailing lists
-- Implement automated dependency scanning (Dependabot, Snyk)
-
-## Additional Resources
-
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [FastAPI Security Documentation](https://fastapi.tiangolo.com/tutorial/security/)
-- [JWT Best Practices](https://tools.ietf.org/html/rfc8725)
-- [NIST Password Guidelines](https://pages.nist.gov/800-63-3/)
-
----
 
 **Last Updated:** 2025-11-26  
 **Version:** 1.0  
