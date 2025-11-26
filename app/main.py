@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from app.config import settings
 from app.database import engine, Base
 from app.routes import auth, account_holders, accounts, transactions, cards, statements, card_transactions
@@ -33,16 +35,13 @@ app.include_router(cards.router, prefix=f"{settings.API_PREFIX}/cards", tags=["C
 app.include_router(card_transactions.router, prefix=f"{settings.API_PREFIX}", tags=["Card Transactions"])
 app.include_router(statements.router, prefix=f"{settings.API_PREFIX}", tags=["Statements"])
 
+# Mount static files
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 @app.get("/")
 async def root():
-    return {
-        "message": "Banking REST Service API",
-        "version": settings.API_VERSION,
-        "docs": f"{settings.API_PREFIX}/docs"
-    }
+    return FileResponse('app/static/index.html')
 
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
-
