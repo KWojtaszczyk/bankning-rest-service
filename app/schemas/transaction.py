@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
 from typing import Optional
 from decimal import Decimal
@@ -8,9 +8,16 @@ class TransactionBase(BaseModel):
     description: Optional[str] = None
 
 class TransferRequest(TransactionBase):
-    from_account_number: str
-    to_account_number: str
+    from_account_id: int = Field(..., description="ID of the source account")
+    to_account_number: str = Field(..., description="Destination account number")
     currency: str = "USD"
+
+class TransactionFilter(BaseModel):
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    transaction_type: Optional[str] = None
+    min_amount: Optional[Decimal] = None
+    max_amount: Optional[Decimal] = None
 
 class TransactionResponse(BaseModel):
     id: int
@@ -25,6 +32,5 @@ class TransactionResponse(BaseModel):
     created_at: datetime
     completed_at: Optional[datetime]
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
