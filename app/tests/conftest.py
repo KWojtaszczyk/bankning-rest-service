@@ -34,3 +34,14 @@ def client(test_db):
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture(scope="function")
+def db_session(test_db):
+    """Get a database session for testing"""
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
