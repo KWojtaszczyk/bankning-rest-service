@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from config import settings
-from database import engine, Base
-from routes import auth, account_holders, accounts, transactions, cards, statements
+from app.config import settings
+from app.database import engine, Base
+from app.routes import auth, account_holders, accounts, transactions, cards, statements
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -16,6 +16,7 @@ app = FastAPI(
 )
 
 # Configure CORS
+# TODO: In production, replace allow_origins=["*"] with specific domain list
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # In production, specify actual origins

@@ -16,5 +16,10 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if not self.SECRET_KEY:
+            raise ValueError("SECRET_KEY must be set in environment variables or .env file")
+
 
 settings = Settings()

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Date, ForeignKey, Enum, Boolean, Numeric
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 from app.database import Base
 import enum
 
@@ -32,9 +32,9 @@ class Card(Base):
     is_contactless = Column(Boolean, default=True)
     daily_limit = Column(Numeric(precision=15, scale=2), default=1000.00)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     activated_at = Column(DateTime)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationships
     account = relationship("Account", back_populates="cards")
